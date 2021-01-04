@@ -2,7 +2,7 @@ use nannou::color;
 use nannou::prelude::*;
 
 fn main() {
-    nannou::sketch(view).run();
+    nannou::sketch(view).size(640, 640).run();
 }
 
 fn view(app: &App, frame: Frame) {
