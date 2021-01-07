@@ -5,12 +5,14 @@ const COL_COUNT: u32 = 40;
 const PAD: u32 = 20;
 const CANVAS_WIDTH: u32 = COL_COUNT * PAD;
 const CANVAS_HEIGHT: u32 = ROW_COUNT * PAD;
-const DOT_RADIUS: f32 = 2.0;
-const WAVE_AMPLITUDE: f32 = 7.0;
-const WAVE_PERIOD: f32 = 9.0;
+const DOT_RADIUS_MAG: f32 = 1.1;
+const DOT_RADIUS_MIN: f32 = DOT_RADIUS_MAG + 1.5;
+const WAVE_AMPLITUDE: f32 = 8.0;
+const WAVE_PERIOD: f32 = 5.0;
 const WAVE_SPEED: f32 = 1.9;
 
 fn main() {
+    println!("Rendering a {} by {} image", CANVAS_WIDTH, CANVAS_HEIGHT);
     nannou::sketch(view).size(CANVAS_WIDTH, CANVAS_HEIGHT).run();
 }
 
@@ -25,17 +27,17 @@ fn view(app: &App, frame: Frame) {
 
     for row in 0..=ROW_COUNT {
         for col in 0..=COL_COUNT {
-            let index = (row + col) as f32 / WAVE_PERIOD;
+            let period = t + (row + col) as f32 / WAVE_PERIOD;
 
             let x = bounds.left() + (col as f32) * col_w;
-            let x_offset = (t + index).sin() * WAVE_AMPLITUDE;
+            let x_offset = period.sin() * WAVE_AMPLITUDE;
             let y = bounds.top() - (row as f32) * row_h;
-            let y_offset = (t + index).cos() * WAVE_AMPLITUDE;
+            let y_offset = period.cos() * WAVE_AMPLITUDE;
 
             draw.ellipse()
                 .x_y(x + x_offset, y + y_offset)
-                .radius(DOT_RADIUS)
-                .color(hsv(0.0, 0.0, (t + index).sin() + 1.5));
+                .radius(DOT_RADIUS_MAG * period.sin() + DOT_RADIUS_MIN)
+                .color(hsv(0.0, 0.0, 0.9));
         }
     }
 
